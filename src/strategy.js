@@ -116,7 +116,10 @@ Strategy.prototype.authenticate = function (req, options) {
     // Workaround instead of reimplementing authenticate function
     req.query = { ...req.query, ...req.body };
     if(req.body && req.body.user){
-      req.appleProfile = JSON.parse(req.body.user)
+      if (typeof req.body.user === 'string')
+        req.appleProfile = JSON.parse(req.body.user);
+      else if (typeof req.body.user === 'object')
+        req.appleProfile = req.body.user;
     }
     OAuth2Strategy.prototype.authenticate.call(this, req, options);
   };
